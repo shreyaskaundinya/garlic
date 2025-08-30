@@ -1,0 +1,20 @@
+<style>
+	nav {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		background-color: #f0f0f0;
+		position: sticky;
+		top: 0;
+		z-index: 100;
+		padding: 1rem;
+		border: 1px solid #000;
+	}
+</style>
+
+<nav>
+	<p>Shreyas Kaundinya</p>
+	{each $navLinks as $navLink}
+	<a href="{{ $navLink.href }}">{{ $navLink.text }}</a>
+	{/each}
+</nav>

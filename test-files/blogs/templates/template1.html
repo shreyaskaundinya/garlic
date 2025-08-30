@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Shreyas Kaundinya : {{ $title }}</title>
+		<link rel="stylesheet" href="../assets/styles/global.css" />
+	</head>
+	<style>
+		body {
+			background-color: #f0f0f0;
+		}
+
+		main {
+			padding: 1rem;
+			border: 1px solid #000;
+		}
+	</style>
+
+	<body>
+		<Navbar />
+		<h1>{{ $title }}</h1>
+		<main>{{ $content }}</main>
+
+		<Footerbar />
+		<Tags />
+	</body>
+</html>
