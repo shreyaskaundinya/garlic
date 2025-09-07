@@ -1,16 +1,42 @@
 <style>
+  .tags-container {
+    margin: 1rem 0;
+  }
+
 	.tags {
-		background-color: #f0f0f0;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
-		margin-right: 0.5rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		justify-content: flex-start;
+		align-items: center;
+
+		/* remove default list style */
+		list-style: none;
+		margin-block-start: 0;
+		margin-block-end: 0;
+		margin-inline-start: 0;
+		margin-inline-end: 0;
+		padding-inline-start: 0;
 	}
+
+	.tags li {
+		background-color: #f0f0f0;
+		margin: 0;
+    padding: 0;
+	}
+
+	.tags li a {
+    padding: 0;
+  }
 </style>
 
-<ul class="tags">
-	<!-- {#each $tags as $tag}
+<div class="tags-container">
+	<h3>Tags</h2>
+	<ul class="tags">
+		<!-- {#each $tags as $tag}
 	<li key="{{ $tag }}">{{ $tag }}</li>
 	{/each} -->
 
-	{{ $tags }}
-</ul>
+		{{ $tags }}
+	</ul>
+</div>

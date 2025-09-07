@@ -1,7 +1,7 @@
 ---
 title: blog-1
 publish: true
-template: template1
+template: blog
 tags:
     - tag1
     - tag2

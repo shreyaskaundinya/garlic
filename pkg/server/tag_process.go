@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"path/filepath"
 	"sort"
+	"strings"
 	"time"
 
 	mapset "github.com/deckarep/golang-set/v2"
@@ -60,6 +62,35 @@ func (s *Server) processTags() error {
 
 	sort.Strings(tags)
 
+	template := `
+			{{ $content }}
+		`
+
+	// find the template for the tag page
+	tagsTemplatePath := filepath.Join(
+		s.SrcPath,
+		"templates",
+		"_tags.html",
+	)
+
+	log.Infow("Tags Template Path: ", "tagsTemplatePath", tagsTemplatePath)
+
+	t, ok := s.TemplateMD.Get(
+		tagsTemplatePath,
+	)
+	if ok {
+		log.Infow("Found tags template")
+
+		err := t.F.ReadFile()
+		if err != nil {
+			return err
+		}
+
+		template = string(t.F.Body)
+
+		log.Infow("Template: ", "template", template)
+	}
+
 	tagsHTML := `<ul>
 	`
 
@@ -109,6 +140,14 @@ func (s *Server) processTags() error {
 
 		tagHTML += `</ul>`
 
+		pageHTML := strings.ReplaceAll(template, "{{ $content }}", tagHTML)
+		pageHTML = strings.ReplaceAll(pageHTML, "{{ $title }}", tag)
+
+		content, err := s.injectComponents(&parser.Meta{}, &pageHTML)
+		if err != nil {
+			return err
+		}
+
 		destPath := path.Join(s.DestPath, "tags", tag)
 
 		doesDestPathExist, err := utils.PathExists(destPath)
@@ -123,7 +162,7 @@ func (s *Server) processTags() error {
 			}
 		}
 
-		err = os.WriteFile(path.Join(destPath, "index.html"), []byte(tagHTML), 0644)
+		err = os.WriteFile(path.Join(destPath, "index.html"), []byte(content), 0644)
 		if err != nil {
 			return err
 		}

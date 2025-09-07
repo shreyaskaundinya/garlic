@@ -2,7 +2,7 @@
 title: Riff
 description: A multithreaded packet sniffing tool and IP sniffing tool.
 publish: false
-template: template1
+template: blog
 tags:
     - tag1
     - tag2

@@ -74,11 +74,9 @@ func (s *Server) Start() {
 					return
 				}
 
-				log.Infow("event:", "event", event)
-
 				log.Infow("modified file:", "event", event.Name)
 
-				err = s.render()
+				err = s.render(&RenderEvent{Event: event, RenderAll: false})
 				if err != nil {
 					log.Errorw("Error rendering", "error", err)
 				}
@@ -112,7 +110,7 @@ func (s *Server) Start() {
 	}
 
 	// read templates and render once on init
-	err = s.render()
+	err = s.render(&RenderEvent{RenderAll: true})
 	if err != nil {
 		log.Errorw("Error rendering", "error", err)
 		return

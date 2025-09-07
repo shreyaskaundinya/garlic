@@ -36,10 +36,28 @@ func (s *Server) injectHTML(
 	content := strings.ReplaceAll(st, "{{ $content }}", html.String())
 	content = strings.ReplaceAll(content, "{{ $title }}", utils.GetSafeValue[string](fileMetadata.Title))
 
+	return s.injectComponents(fileMetadata, &content)
+}
+
+func (s *Server) injectComponents(
+	fileMetadata *parser.Meta,
+	html *string,
+) (string, error) {
+	if html == nil {
+		return "", fmt.Errorf("html is nil")
+	}
+
+	content := *html
+
 	// inject components like <Navbar /> with the content of the component
 	stoppedMidway := false
 	s.ComponentsMD.Store.Range(func(key string, value *parser.Meta) bool {
 		componentContent := value.F.Body
+
+		// TODO: see if component actually exists
+		if componentContent == nil {
+			return true
+		}
 
 		// if we find <Tags />, we need to inject the tags from the file metadata
 		if key == "Tags" {

@@ -25,3 +25,7 @@ func (m *Metadata) Get(key string) (*Meta, bool) {
 func (m *Metadata) Delete(key string) {
 	m.Store.Delete(key)
 }
+
+func (m *Metadata) Range(fn func(key string, value *Meta) bool) {
+	m.Store.Range(fn)
+}

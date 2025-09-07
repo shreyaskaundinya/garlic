@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/fsnotify/fsnotify"
 	"github.com/shreyaskaundinya/garlic/pkg/parser"
 )
 
@@ -40,4 +41,13 @@ type Server struct {
 
 	// render chan
 	renderCh chan *parser.File
+}
+
+type RenderEvent struct {
+	Event               fsnotify.Event
+	RenderAll           bool
+	ProcessAssets       bool
+	ProcessDependencies bool
+	ProcessContent      bool
+	ProcessTags         bool
 }
