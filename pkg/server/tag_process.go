@@ -1,17 +1,18 @@
 package server
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"path"
 	"path/filepath"
 	"sort"
-	"strings"
 	"time"
 
 	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/shreyaskaundinya/garlic/pkg/parser"
 	"github.com/shreyaskaundinya/garlic/pkg/utils"
+	"golang.org/x/net/html"
 )
 
 func (s *Server) processTags() error {
@@ -75,33 +76,71 @@ func (s *Server) processTags() error {
 
 	log.Infow("Tags Template Path: ", "tagsTemplatePath", tagsTemplatePath)
 
-	t, ok := s.TemplateMD.Get(
+	tagsTemplate, ok := s.TemplateMD.Get(
 		tagsTemplatePath,
 	)
 	if ok {
 		log.Infow("Found tags template")
 
-		err := t.F.ReadFile()
+		err := tagsTemplate.F.ReadFile()
 		if err != nil {
 			return err
 		}
 
-		template = string(t.F.Body)
-
-		log.Infow("Template: ", "template", template)
+		template = string(tagsTemplate.F.Body)
 	}
 
-	tagsHTML := `<ul>
-	`
+	tagsTemplateAST, err := html.Parse(bytes.NewReader([]byte(template)))
+	if err != nil {
+		return err
+	}
+
+	tagsList := &html.Node{
+		Type: html.ElementNode,
+		Data: "ul",
+	}
 
 	for _, tag := range tags {
 		count := len(tagToFilesMap[tag])
-		tagsHTML += fmt.Sprintf(`
-		<li><a href="/tags/%s">%s ( %d )</a></li>
-		`, tag, tag, count)
+
+		li := &html.Node{
+			Type: html.ElementNode,
+			Data: "li",
+		}
+
+		a := &html.Node{
+			Type: html.ElementNode,
+			Data: "a",
+		}
+
+		a.Attr = append(a.Attr, html.Attribute{
+			Key: "href",
+			Val: fmt.Sprintf("/tags/%s", tag),
+		})
+
+		a.AppendChild(&html.Node{
+			Type: html.TextNode,
+			Data: fmt.Sprintf("%s ( %d )", tag, count),
+		})
+
+		li.AppendChild(a)
+
+		tagsList.AppendChild(li)
 	}
 
-	tagsHTML += `</ul>`
+	// replace recursively
+	s.recursivelyReplace(
+		tagsTemplateAST,
+		tagsList,
+		&parser.Meta{},
+		nil,
+	)
+
+	tagsHTML := bytes.NewBuffer(make([]byte, 0))
+	err = html.Render(tagsHTML, tagsTemplateAST)
+	if err != nil {
+		return err
+	}
 
 	destPath := path.Join(s.DestPath, "tags")
 	doesDestPathExist, err := utils.PathExists(destPath)
@@ -116,37 +155,90 @@ func (s *Server) processTags() error {
 		}
 	}
 
-	err = os.WriteFile(path.Join(destPath, "index.html"), []byte(tagsHTML), 0644)
+	err = os.WriteFile(path.Join(destPath, "index.html"), tagsHTML.Bytes(), 0644)
 	if err != nil {
 		return err
 	}
 
+	// ------------------------------------------------------------------
+
+	individualTagTemplatePath := filepath.Join(
+		s.SrcPath,
+		"templates",
+		"_individual_tag.html",
+	)
+
+	log.Infow("Tags Template Path: ", "tagsTemplatePath", tagsTemplatePath)
+
+	individualTagTemplate, ok := s.TemplateMD.Get(
+		individualTagTemplatePath,
+	)
+	if ok {
+		log.Infow("Found individual tag template")
+
+		err := individualTagTemplate.F.ReadFile()
+		if err != nil {
+			return err
+		}
+
+		template = string(individualTagTemplate.F.Body)
+	}
+
 	// create a page for each tag
 	for _, tag := range tags {
-		tagHTML := `<ul>
-		`
+		tagsTemplateAST, err = html.Parse(bytes.NewReader([]byte(template)))
+		if err != nil {
+			return err
+		}
+
+		tagList := &html.Node{
+			Type: html.ElementNode,
+			Data: "ul",
+		}
+
 		for _, meta := range tagToFilesMap[tag] {
 			if meta == nil {
 				continue
 			}
 
+			li := &html.Node{
+				Type: html.ElementNode,
+				Data: "li",
+			}
+
 			sitepath := meta.Sitepath
 			title := meta.Title
 
-			tagHTML += fmt.Sprintf(`
-			<li><a href="%s">%s</a></li>
-			`, sitepath, title)
+			a := &html.Node{
+				Type: html.ElementNode,
+				Data: "a",
+			}
+
+			a.Attr = append(a.Attr, html.Attribute{
+				Key: "href",
+				Val: sitepath,
+			})
+
+			a.AppendChild(&html.Node{
+				Type: html.TextNode,
+				Data: title,
+			})
+
+			li.AppendChild(a)
+
+			tagList.AppendChild(li)
 		}
 
-		tagHTML += `</ul>`
-
-		pageHTML := strings.ReplaceAll(template, "{{ $content }}", tagHTML)
-		pageHTML = strings.ReplaceAll(pageHTML, "{{ $title }}", tag)
-
-		content, err := s.injectComponents(&parser.Meta{}, &pageHTML)
-		if err != nil {
-			return err
-		}
+		// replace recursively
+		s.recursivelyReplace(
+			tagsTemplateAST,
+			tagList,
+			&parser.Meta{
+				Title:    tag,
+				Sitepath: fmt.Sprintf("/tags/%s", tag),
+			},
+			nil,
+		)
 
 		destPath := path.Join(s.DestPath, "tags", tag)
 
@@ -162,7 +254,13 @@ func (s *Server) processTags() error {
 			}
 		}
 
-		err = os.WriteFile(path.Join(destPath, "index.html"), []byte(content), 0644)
+		tagHTML := bytes.NewBuffer(make([]byte, 0))
+		err = html.Render(tagHTML, tagsTemplateAST)
+		if err != nil {
+			return err
+		}
+
+		err = os.WriteFile(path.Join(destPath, "index.html"), tagHTML.Bytes(), 0644)
 		if err != nil {
 			return err
 		}

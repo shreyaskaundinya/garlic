@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -48,7 +47,9 @@ func (s *Server) readComponents() error {
 		}
 
 		// strip the .html extension
-		componentName := strings.TrimSuffix(info.Name(), ".html")
+		componentName := strings.ToLower(
+			strings.TrimSuffix(info.Name(), ".html"),
+		)
 
 		f := parser.NewFile(path, parser.FILE_TYPE_COMPONENT)
 		err = f.ReadFile()
@@ -95,7 +96,7 @@ func (s *Server) readTemplates() error {
 			return nil
 		}
 
-		fmt.Println("Template File: ", path)
+		log.Infow("Template File: ", "path", path)
 
 		f := parser.NewFile(path, parser.FILE_TYPE_TEMPLATE)
 

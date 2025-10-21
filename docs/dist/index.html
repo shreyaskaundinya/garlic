@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<title>Home</title>
+		<link rel="stylesheet" href="/assets/styles/global.css"/>
+	<style></style></head>
+	
+
+	<body>
+		<html><head></head><body><nav></nav>
+</body></html><navbar></navbar>
+		<main><html><head></head><body><h1 id="garlic-fast-and-simple-static-site-generator-in-go">Garlic: Fast and Simple Static Site Generator in Go</h1>
+<p><em>By Shreyas Kaundinya</em></p>
+<hr/>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#0-contact-me">0. Contact Me</a></li>
+<li><a href="#1-intro--installation">1. Intro &amp; Installation</a></li>
+<li><a href="#2-running-the-project">2. Running the project</a></li>
+<li><a href="#3-folder-structure">3. Folder Structure</a></li>
+<li><a href="#4-architecture">4. Architecture</a></li>
+<li><a href="#5-deployment">5. Deployment</a></li>
+<li><a href="#6-todo--limitations">6. TODO &amp; Limitations</a></li>
+</ul>
+<hr/>
+<h2 id="0-contact-me">0. Contact Me</h2>
+<p>If you have any questions, feel free to drop an DM on <a href="https://x.com/shreyassk08">X (Formerly Twitter)</a></p>
+<hr/>
+<p><a href="#table-of-contents">Back to top</a></p>
+<h2 id="1-intro--installation">1. Intro &amp; Installation</h2>
+<h3 id="11-features">1.1 Features</h3>
+<ul>
+<li>Classic Static Site Generator with some opinionated features</li>
+<li>Converts <strong>markdown content into HTML</strong> which can be served as a static website.</li>
+<li><strong>HTML components</strong> using JSX like syntax (with limited support as of now)</li>
+<li><strong>Templates</strong> for content</li>
+<li><strong>Tags</strong> using frontmatter</li>
+<li><strong>Hot reloading</strong> support for development (reloads when content is changed)</li>
+</ul>
+<h3 id="12-installation--build-instructions">1.2 Installation / Build Instructions</h3>
+<blockquote>
+<p>NOTE: Since I currently don&#39;t have a release, you&#39;ll have to build the project yourself.</p>
+</blockquote>
+<p>Step 1: Clone the <a href="https://github.com/shreyaskaundinya/garlic">repository</a></p>
+<p>Step 2: Run the following commands</p>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>go mod tidy
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span><span style="color:#75715e"># windows</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>go build -o garlic.exe main.go
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span><span style="color:#75715e"># linux</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>go build -o garlic main.go
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span><span style="color:#75715e"># macos</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>go build -o garlic main.go
+</span></span></code></pre><hr/>
+<p><a href="#table-of-contents">Back to top</a></p>
+<h2 id="2-running-the-project">2. Running the project</h2>
+<h3 id="21-command-line-arguments">2.1 Command Line Arguments</h3>
+<ul>
+<li><code>--src-folder</code>: The source folder of the project</li>
+<li><code>--dest-folder</code>: The destination folder of the project</li>
+<li><code>--serve</code>: Whether to serve the project [serves the project at <code>http://localhost:8084</code>]. This also enables hot reloading support for when the content is changed.</li>
+<li><code>--seed-files</code>: Whether to seed the project [adds the default files to your source folder]</li>
+</ul>
+<h3 id="22-examples">2.2 Examples</h3>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>.\garlic.exe --src-folder <span style="color:#e6db74">&#34;S:\src&#34;</span> --dest-folder <span style="color:#e6db74">&#34;S:\dest&#34;</span> --serve --seed-files
+</span></span></code></pre><pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>./garlic --src-folder ./src --dest-folder ./dest --serve --seed-files
+</span></span></code></pre><hr/>
+<p><a href="#table-of-contents">Back to top</a></p>
+<h2 id="3-folder-structure">3. Folder Structure</h2>
+<p>The folder structure is fixed, the base folders that are required in the source folder are :</p>
+<ul>
+<li><a href="#32-content-folder--srccontent"><code>src/content</code></a></li>
+<li><a href="#33-templates-folder--srctemplates"><code>src/templates</code></a></li>
+<li><a href="#34-assets-folder--srcassets"><code>src/assets</code></a></li>
+<li><a href="#35-components-folder--srccomponents"><code>src/components</code></a></li>
+</ul>
+<p>We will dive deeper into what each folder signifies in the next section.</p>
+<blockquote>
+<p>Don&#39;t worry about the boilerplate code, it will be seeded for you if you use the <code>--seed-files</code> flag.</p>
+</blockquote>
+<h3 id="31-tree">3.1 Tree</h3>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>src/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>├── content/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>   ├── index.md
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>├── templates/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>   ├── index.html
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>   ├── _tags.html
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>   ├── _individual_tag.html
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>├── components/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>   ├── Footerbar.html
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>   ├── Navbar.html
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>   ├── Tags.html
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>├── assets/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>   ├── styles/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>       ├── global.css
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>└── dest/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span>    ├── assets/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span>       ├── styles/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18</span><span>           ├── global.css
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19</span><span>    ├── index.html
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20</span><span>    ├── tags/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21</span><span>       ├── index.html
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22</span><span>       ├── tag-on-index-page/
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23</span><span>           ├── index.html
+</span></span></code></pre><h3 id="32-content-folder--srccontent">3.2 Content Folder : <code>src/content</code></h3>
+<p>The content folder is where you put your markdown files. The routing of the website is based on the file structure inside this folder.</p>
+<p>So if you want to create a page at <code>/about</code>, you can create a file at <code>src/content/about/index.md</code>.</p>
+<p>The rendered HTML will be in <code>dest/about/index.html</code>.</p>
+<p>Each markdown file will contain something called as <strong>frontmatter</strong>. This is a way to add metadata to the markdown file. It is written between <code>---</code> lines. Follows the YAML syntax.</p>
+<h4 id="content-example">Content Example</h4>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>---
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>title: &#34;Home&#34;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>publish: true
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>template: index
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>date: 2025-10-21
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>author: author
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>tags:
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>    <span style="color:#66d9ef">-</span> tag-on-index-page
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>---
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span><span style="color:#75715e">&lt;!-- rest of the content of the page --&gt;</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span># Home
+</span></span></code></pre><ul>
+<li><code>title</code>: The title of the page, this can be used in the template</li>
+<li><code>publish</code>: Whether to publish the page, if false, the page will not be rendered</li>
+<li><code>template</code>: The template to use for the page, this is the template that will be used to render the page</li>
+<li><code>date</code>: The date of the page.</li>
+<li><code>author</code>: The author of the page.</li>
+<li><code>tags</code>: The tags of the page. <strong>Atleast one tag is required per page</strong>.</li>
+</ul>
+<blockquote>
+<p>NOTE: currently there is no support for <code>date</code> and <code>author</code> in the templates.</p>
+</blockquote>
+<h3 id="33-templates-folder--srctemplates">3.3 Templates Folder : <code>src/templates</code></h3>
+<p>Each markdown file in the <code>src/content</code> folder will be rendered into an HTML file in the <code>dest</code> folder.</p>
+<p>Templates contain HTML that will wrap around the markdown content.</p>
+<blockquote>
+<p>NOTE : Currently only supports flat file structure in this folder.</p>
+</blockquote>
+<p>Content of the template is injected into the <code>{{ $content }}</code> placeholder.</p>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>&lt;<span style="color:#f92672">main</span>&gt;{{ $content }}&lt;/<span style="color:#f92672">main</span>&gt;
+</span></span></code></pre><p>For the above <a href="#content-example">example</a>, the rendered HTML will be:</p>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>&lt;<span style="color:#f92672">main</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span>  &lt;<span style="color:#f92672">h1</span>&gt;Home&lt;/<span style="color:#f92672">h1</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span>&lt;/<span style="color:#f92672">main</span>&gt;
+</span></span></code></pre><p>Title of the template from the frontmatter is injected into the <code>{{ $title }}</code> placeholder.</p>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>&lt;<span style="color:#f92672">title</span>&gt;{{ $title }}&lt;/<span style="color:#f92672">title</span>&gt;
+</span></span></code></pre><p>For the above <a href="#content-example">example</a>, the rendered HTML will be:</p>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>&lt;<span style="color:#f92672">title</span>&gt;Home&lt;/<span style="color:#f92672">title</span>&gt;
+</span></span></code></pre><p>Some special templates required for internal purposes are:</p>
+<blockquote>
+<p>NOTE: working actively to make these templates more flexible and powerful. A default template will be provided during <code>seeding</code></p>
+</blockquote>
+<ul>
+<li><code>_tags.html</code> : This is the template where all the tags will be listed with their count.
+<ul>
+<li><code>{{ $content }}</code> will be replaced with <code>&lt;ul&gt;...&lt;/ul&gt;</code> tag with each tag as a <code>&lt;li&gt;</code>. Each <code>&lt;li&gt;</code> tag will have a <code>&lt;a&gt;</code> tag with the tag name and the count of number of pages that have that tag. The <code>&lt;a&gt;</code> tag will have the href to the individual tag page where all the pages with that tag will be listed.</li>
+</ul>
+</li>
+<li><code>_individual_tag.html</code> : This is the template where a single tag and all the pages with that tag will be listed.
+<ul>
+<li><code>{{ $content }}</code> will be replaced with the list of pages with that tag.</li>
+</ul>
+</li>
+</ul>
+<h3 id="34-assets-folder--srcassets">3.4 Assets Folder : <code>src/assets</code></h3>
+<p>Contains all the static assets of the website. This folder will be directly copy pasted into your destination folder. The files can be accessed using the <code>/assets/</code> prefix.</p>
+<p>For example, if you want to access the <code>global.css</code> file, you can do it by using the <code>/assets/styles/global.css</code> path.</p>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>&lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stylesheet&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/assets/styles/global.css&#34;</span> /&gt;
+</span></span></code></pre><h3 id="35-components-folder--srccomponents">3.5 Components Folder : <code>src/components</code></h3>
+<p>You can add smaller HTML components here. These will be injected into the templates.</p>
+<blockquote>
+<p>NOTE : Currently only supports flat file structure in this folder.</p>
+</blockquote>
+<blockquote>
+<p>WARN: The components cannot have the same name as a native html element such as <code>div</code>, <code>span</code>, <code>a</code>, <code>img</code>, etc.</p>
+</blockquote>
+<p>Let&#39;s say we create a component called <code>Navbar.html</code></p>
+<p>To use it in a template, the syntax is as follows:</p>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>&lt;<span style="color:#f92672">Navbar</span>&gt;&lt;/<span style="color:#f92672">Navbar</span>&gt;
+</span></span></code></pre><p>Limitations (which could later be supported):</p>
+<ul>
+<li>Self closing tags are not supported.</li>
+<li>No support for conditional rendering.</li>
+<li>No support for loops</li>
+<li>No support for props for components</li>
+</ul>
+<hr/>
+<p><a href="#table-of-contents">Back to top</a></p>
+<h2 id="4-architecture">4. Architecture</h2>
+<blockquote>
+<p>This section is a work in progress.</p>
+</blockquote>
+<p>Garlic is a static site generator that is built in Go. It is designed to be fast and simple to use.</p>
+<p>Markdown files written in the <code>src/content</code> folder are parsed and rendered into HTML, this is then injected into the templates.</p>
+<p>Components are small HTML files that can be injected into the templates based on the file name, similar to JSX.</p>
+<p><code>src/components/Navbar.html</code></p>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>&lt;<span style="color:#f92672">nav</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span>  &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/&#34;</span>&gt;Home&lt;/<span style="color:#f92672">a</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span>&lt;/<span style="color:#f92672">nav</span>&gt;
+</span></span></code></pre><p><code>src/templates/index.html</code></p>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>&lt;<span style="color:#f92672">html</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>  &lt;<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;utf-8&#34;</span> /&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;viewport&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;width=device-width, initial-scale=1&#34;</span> /&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>    &lt;<span style="color:#f92672">title</span>&gt;{{ $title }}&lt;/<span style="color:#f92672">title</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>    &lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stylesheet&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/assets/styles/global.css&#34;</span> /&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>  &lt;/<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>  &lt;<span style="color:#f92672">style</span>&gt;&lt;/<span style="color:#f92672">style</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>  &lt;<span style="color:#f92672">body</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>    &lt;<span style="color:#f92672">Navbar</span>&gt;&lt;/<span style="color:#f92672">Navbar</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>    &lt;<span style="color:#f92672">main</span>&gt;{{ $content }}&lt;/<span style="color:#f92672">main</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>  &lt;/<span style="color:#f92672">body</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>&lt;/<span style="color:#f92672">html</span>&gt;
+</span></span></code></pre><p><code>src/content/index.md</code></p>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>---
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>title: &#34;Home&#34;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>publish: true
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>template: index
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>author: author
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>tags:
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>    <span style="color:#66d9ef">-</span> tags
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>---
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span># Home
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>This is the home page.
+</span></span></code></pre><p>The rendered HTML will be:</p>
+<p><code>dest/index.html</code></p>
+<pre style="color:#f8f8f2;background-color:#272822;"><code><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>&lt;<span style="color:#f92672">html</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>  &lt;<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;utf-8&#34;</span> /&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;viewport&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;width=device-width, initial-scale=1&#34;</span> /&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>    &lt;<span style="color:#f92672">title</span>&gt;Home&lt;/<span style="color:#f92672">title</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>    &lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stylesheet&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/assets/styles/global.css&#34;</span> /&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>  &lt;/<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>  &lt;<span style="color:#f92672">body</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>    &lt;<span style="color:#f92672">nav</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>      &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/&#34;</span>&gt;Home&lt;/<span style="color:#f92672">a</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>    &lt;/<span style="color:#f92672">nav</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>    &lt;<span style="color:#f92672">main</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>      &lt;<span style="color:#f92672">h1</span>&gt;Home&lt;/<span style="color:#f92672">h1</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span>      &lt;<span style="color:#f92672">p</span>&gt;This is the home page.&lt;/<span style="color:#f92672">p</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span>    &lt;/<span style="color:#f92672">main</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18</span><span>  &lt;/<span style="color:#f92672">body</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19</span><span>&lt;/<span style="color:#f92672">html</span>&gt;
+</span></span></code></pre><hr/>
+<p><a href="#table-of-contents">Back to top</a></p>
+<h2 id="5-deployment">5. Deployment</h2>
+<p>Once you follow these steps and run Garlic on your content, you have freshly baked static website 🧄🥖 ready to be deployed.</p>
+<p>These are some ways you can deploy your website:</p>
+<ul>
+<li>simply copying the <code>dest</code> folder to your web server.</li>
+<li>pushing to a Github repository and deploying using Github Pages</li>
+<li>pushing to a git repository and deploying using Vercel, Netlify, etc which provide you with a free domain and a way to do continuous deployment.</li>
+</ul>
+<hr/>
+<p><a href="#table-of-contents">Back to top</a></p>
+<h2 id="6-todo--limitations">6. TODO &amp; Limitations</h2>
+<ul>
+<li><input disabled="" type="checkbox"/> Not require atleast one tag per page</li>
+<li><input disabled="" type="checkbox"/> Add concurrency support to rendering</li>
+<li><input disabled="" type="checkbox"/> Deleting unused files from destination folder</li>
+<li><input disabled="" type="checkbox"/> Being able to use author from frontmatter in templates</li>
+<li><input disabled="" type="checkbox"/> Being able to iterate over posts and tags in templates</li>
+<li><input disabled="" type="checkbox"/> Being able to use date from frontmatter in templates</li>
+<li><input disabled="" type="checkbox"/> RSS feed generation</li>
+<li><input disabled="" type="checkbox"/> Components
+<ul>
+<li><input disabled="" type="checkbox"/> No support for self closing tags</li>
+<li><input disabled="" type="checkbox"/> No support for conditional rendering</li>
+<li><input disabled="" type="checkbox"/> No support for loops</li>
+<li><input disabled="" type="checkbox"/> No support for props for components</li>
+</ul>
+</li>
+</ul>
+<hr/>
+</body></html></main>
+
+		<html><head><style>
+	footer {
+		background-color: #f0f0f0;
+		padding: 1rem;
+		text-align: center;
+	}
+</style>
+
+</head><body><footer>
+	Made with
+	<a href="https://github.com/shreyaskaundinya/garlic" target="_blank">Garlic</a>
+</footer>
+</body></html><footerbar></footerbar>
+		<html><head><style>
+	.tags-container {
+		margin: 1rem 0;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		justify-content: flex-start;
+		align-items: center;
+
+		/* remove default list style */
+		list-style: none;
+		margin-block-start: 0;
+		margin-block-end: 0;
+		margin-inline-start: 0;
+		margin-inline-end: 0;
+		padding-inline-start: 0;
+	}
+
+	.tags li {
+		background-color: #f0f0f0;
+		margin: 0;
+		padding: 0;
+	}
+
+	.tags li a {
+		padding: 0;
+	}
+
+	.tags-title {
+		font-size: 1.4rem;
+	}
+</style>
+
+</head><body><div class="tags-container">
+	<h3>
+		<a href="/tags" class="tags-title"> Tags </a>
+	</h3>
+
+	<ul class="tags"><li><a href="/tags/tag-on-index-page">tag-on-index-page</a></li></ul>
+</div>
+</body></html>
+	
+
+</body></html>

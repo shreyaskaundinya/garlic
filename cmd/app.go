@@ -3,11 +3,12 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/shreyaskaundinya/garlic/models"
 	"github.com/shreyaskaundinya/garlic/pkg/server"
 )
 
-func StartGarlic(SrcPath string, DestPath string) {
-	s, err := server.NewServer(SrcPath, DestPath)
+func StartGarlic(config *models.Config) {
+	s, err := server.NewServer(config)
 
 	if err != nil || s == nil {
 		// panic(err)
@@ -15,5 +16,5 @@ func StartGarlic(SrcPath string, DestPath string) {
 		return
 	}
 
-	s.Start()
+	s.Start(config)
 }

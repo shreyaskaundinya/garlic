@@ -1,7 +1,7 @@
 <style>
-  .tags-container {
-    margin: 1rem 0;
-  }
+	.tags-container {
+		margin: 1rem 0;
+	}
 
 	.tags {
 		display: flex;
@@ -22,21 +22,24 @@
 	.tags li {
 		background-color: #f0f0f0;
 		margin: 0;
-    padding: 0;
+		padding: 0;
 	}
 
 	.tags li a {
-    padding: 0;
-  }
+		padding: 0;
+	}
+
+	.tags-title {
+		font-size: 1.4rem;
+	}
 </style>
 
 <div class="tags-container">
-	<h3>Tags</h2>
-	<ul class="tags">
-		<!-- {#each $tags as $tag}
-	<li key="{{ $tag }}">{{ $tag }}</li>
-	{/each} -->
+	<h3>
+		<a href="/tags" class="tags-title"> Tags </a>
+	</h3>
 
+	<ul class="tags">
 		{{ $tags }}
 	</ul>
 </div>

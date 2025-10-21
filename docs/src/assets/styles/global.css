@@ -1,0 +1,54 @@
+* {
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+
+	max-width: 768px;
+	margin: 0 auto;
+}
+
+h1,
+h2 {
+	text-decoration: underline;
+}
+
+hr {
+	margin: 3rem 0;
+}
+
+blockquote {
+	border-left: 4px solid #000;
+	padding: 0.2rem 0.5rem;
+	margin-left: 0;
+	background-color: #f0f0f0;
+	width: 100%;
+}
+
+code {
+	background-color: #f0f0f0;
+	color: darkolivegreen;
+	font-weight: bold;
+}
+
+pre > code {
+	padding: 1rem;
+	background-color: unset;
+	color: unset;
+}
+
+a {
+	color: blue;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:visited {
+	color: blue;
+}

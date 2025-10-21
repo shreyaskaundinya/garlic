@@ -180,6 +180,12 @@ func (s *Server) setupMarkdown(path string) (*parser.Meta, error) {
 }
 
 func (s *Server) processEvent(event *RenderEvent) {
+	log := utils.NewLogger()
+
+	defer func() {
+		log.Debugw("event", "event", event)
+	}()
+
 	if event.RenderAll {
 		event.ProcessAssets = true
 		event.ProcessDependencies = true
@@ -187,8 +193,6 @@ func (s *Server) processEvent(event *RenderEvent) {
 		event.ProcessContent = true
 		return
 	}
-
-	log := utils.NewLogger()
 
 	// read the path of changed file
 	path := event.Event.Name
