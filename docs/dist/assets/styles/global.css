@@ -5,7 +5,7 @@
 
 body {
 	margin: 0;
-	padding: 0;
+	padding: 1rem;
 
 	max-width: 768px;
 	margin: 0 auto;
@@ -32,6 +32,10 @@ code {
 	background-color: #f0f0f0;
 	color: darkolivegreen;
 	font-weight: bold;
+}
+
+pre {
+	overflow: scroll;
 }
 
 pre > code {
