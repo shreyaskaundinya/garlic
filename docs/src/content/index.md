@@ -31,6 +31,8 @@ _By Shreyas Kaundinya_
 
 If you have any questions, feel free to drop an DM on [X (Formerly Twitter)](https://x.com/shreyassk08)
 
+Checkout my website [here](https://www.kaundz.com) built using Garlic SSG.
+
 ---
 
 [Back to top](#table-of-contents)
