@@ -92,6 +92,8 @@ go build -o garlic main.go
 ./garlic --src-folder ./src --dest-folder ./dest --serve --seed-files
 ```
 
+> NOTE: dont add a trailing slash to the source or destination folder paths.
+
 ---
 
 [Back to top](#table-of-contents)
