@@ -347,10 +347,10 @@ func (s *Server) Start(config *models.Config) {
 	// serve the html files
 	if config.ShouldServe {
 		go s.serve()
-	}
 
-	// Block main goroutine forever.
-	<-make(chan struct{})
+		// Block main goroutine forever.
+		<-make(chan struct{})
+	}
 }
 
 func (s *Server) serve() {
