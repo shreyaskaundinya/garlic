@@ -3,6 +3,7 @@ title: benchmark
 template: index
 author: John Doe
 date: 2024-01-01
+publish: true
 tags:
   - test-post
 ---

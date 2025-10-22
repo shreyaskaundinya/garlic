@@ -1,6 +1,6 @@
 #!/bin/bash
 # parameters
-files=1
+files=1000
 warm=2
 
 # cleanup
@@ -34,10 +34,6 @@ mkdir -p /tmp/bench/garlic/src/content
 
 ls -la /tmp/bench/garlic/src/
 
-ls -la /tmp/bench/garlic/src/content/
-ls -la /tmp/bench/garlic/src/templates/
-ls -la /tmp/bench/garlic/src/assets/
-ls -la /tmp/bench/garlic/src/components/
 
 # clean content/* dirs
 echo ""
@@ -59,6 +55,10 @@ echo ""
 
 # "cd /tmp/bench/sapling/benchmark && ./../sapling run" \
 
-hyperfine --ignore-failure -p 'sync' -w $warm \
-  "cd /tmp/bench/garlic && ./garlic --src-folder ./src --dest-folder ./dest --seed-files"
+hyperfine -p 'sync' -w $warm \
+  "cd /tmp/bench/garlic && ./garlic --src-folder /tmp/bench/garlic/src --dest-folder /tmp/bench/garlic/dest --seed-files"
 echo ""
+
+
+echo "dest"
+ls -la /tmp/bench/garlic/dest/

@@ -1,12 +1,12 @@
 #!/bin/bash
 # parameters
-files=1
-warm=2
+files=1000
+warm=10
 
 # cleanup
 cleanup() {
     echo "cleaning up"
-    rm -rf /tmp/bench
+    # rm -rf /tmp/bench
 }
 trap cleanup EXIT
 
@@ -52,15 +52,8 @@ hugo new theme mytheme; echo "theme = 'mytheme'" >> hugo.toml; cd /tmp/bench
 ## setup 11ty
 
 
-# create the content folder
+# create the content folder for garlic
 mkdir -p /tmp/bench/garlic/src/content
-
-ls -la /tmp/bench/garlic/src/
-
-ls -la /tmp/bench/garlic/src/content/
-ls -la /tmp/bench/garlic/src/templates/
-ls -la /tmp/bench/garlic/src/assets/
-ls -la /tmp/bench/garlic/src/components/
 
 # clean content/* dirs
 echo ""
@@ -94,5 +87,6 @@ hyperfine --ignore-failure -p 'sync' -w $warm \
   "cd /tmp/bench/hugo && hugo" \
   "cd /tmp/bench/anna && ./anna -r \"site/\"" \
   "cd /tmp/bench/saaru && ./saaru --base-path ./docs" \
-  "cd /tmp/bench/garlic && ./garlic --src-folder ./src --dest-folder ./dest --seed-files"
+  "cd /tmp/bench/garlic && ./garlic --src-folder /tmp/bench/garlic/src --dest-folder /tmp/bench/garlic/dest --seed-files"
+
 echo ""
